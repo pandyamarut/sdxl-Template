@@ -1,5 +1,5 @@
 # Base image
-FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04
+FROM runpod/pytorch:1.13.0-py3.10-cuda11.7.1-devel
 
 ENV DEBIAN_FRONTEND=noninteractive
 
