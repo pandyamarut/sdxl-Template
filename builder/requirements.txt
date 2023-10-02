@@ -1,4 +1,13 @@
 # Required Python packages get listed here, one per line.
 # Reccomended to lock the version number to avoid unexpected changes.
 
+# torchvision==0.14.1+cu117
+
 runpod==1.2.0
+torchvision==0.15.1
+huggingface-hub==0.17.3
+bitsandbytes==0.41.1
+transformers==4.33.3
+xformers==0.0.22
+accelerate==0.23.0
+scipy == 1.11.2
