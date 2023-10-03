@@ -22,6 +22,16 @@ def huggingface_login():
         # If the command failed, you can print an error message or handle the error as needed
         error_message = f"Error running huggingface-cli login: {e}"
         print(error_message)
+
+
+def run_accelerate_config():
+    try:
+        subprocess.run(["accelerate", "config", "deafult"], check=True)
+        print("Accelerate config successful!")
+    except subprocess.CalledProcessError as e:
+        error_message = f"Error running accelerate config: {e}"
+        print(error_message)   
+
 def handler(event):
     '''
     This is the handler function that will be called by the serverless.
@@ -56,6 +66,7 @@ def handler(event):
     try:
         # Execute the command and capture the output
         huggingface_login()
+        run_accelerate_config()
         output = subprocess.check_output(command, stderr=subprocess.STDOUT, text=True, shell=True)
         
         # Return the output directory or a message indicating success

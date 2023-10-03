@@ -36,7 +36,7 @@ RUN python3 -c "from huggingface_hub import snapshot_download; local_dir = '/wor
 # COPY check_version.py /usr/local/lib/python3.8/dist-packages/diffusers/utils/__init__.py
 COPY __init__.py /usr/local/lib/python3.10/dist-packages/diffusers/utils/__init__.py
 
-RUN accelerate config default
+# RUN accelerate config default
 
 ADD src .
 
