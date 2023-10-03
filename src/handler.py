@@ -26,7 +26,7 @@ def huggingface_login():
 
 def run_accelerate_config():
     try:
-        subprocess.run(["accelerate", "config", "deafult"], check=True)
+        subprocess.run(["accelerate", "config", "default"], check=True)
         print("Accelerate config successful!")
     except subprocess.CalledProcessError as e:
         error_message = f"Error running accelerate config: {e}"
