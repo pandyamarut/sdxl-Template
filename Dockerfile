@@ -40,35 +40,5 @@ COPY __init__.py /usr/local/lib/python3.10/dist-packages/diffusers/utils/__init_
 
 ADD src .
 
-# CMD python -u handler.py
-
 CMD ["bash", "-c", "accelerate config default && python -u handler.py"]
 
-# This uses CPU, needs to set GPU.
-
-
-# Log in to Hugging Face (if needed)
-# RUN huggingface-cli login
-
-# Run your specific command
-# CMD [ "bash", "-c", "accelerate config default", "accelerate launch src/train_dreambooth_lora_sdxl.py \
-#   --pretrained_model_name_or_path='stabilityai/stable-diffusion-xl-base-1.0' \
-#   --pretrained_vae_model_name_or_path='madebyollin/sdxl-vae-fp16-fix' \
-#   --instance_data_dir='dog' \
-#   --output_dir='lora-trained-xl-colab' \
-#   --mixed_precision='fp16' \
-#   --instance_prompt='a photo of sks dog' \
-#   --resolution=1024 \
-#   --train_batch_size=2 \
-#   --gradient_accumulation_steps=2 \
-#   --gradient_checkpointing \
-#   --learning_rate=1e-4 \
-#   --lr_scheduler='constant' \
-#   --lr_warmup_steps=0 \
-#   --enable_xformers_memory_efficient_attention \
-#   --mixed_precision='fp16' \
-#   --use_8bit_adam \
-#   --max_train_steps=1 \
-#   --checkpointing_steps=717 \
-#   --seed='0' \
-#   --push_to_hub" ]

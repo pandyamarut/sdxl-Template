@@ -32,23 +32,36 @@ def run_accelerate_config():
         error_message = f"Error running accelerate config: {e}"
         print(error_message)   
 
-def handler(event):
+def handler(job):
     '''
     This is the handler function that will be called by the serverless.
     '''
-    print(event)
 
-    # Define the command to execute
-    command = (
+    job_input = job["input"]
+
+    # Get the parameters from the job input
+
+    model_name = job_input["model_name"]
+    dataset_directory_path = job_input["dataset_directory_path"]
+    output_directory = job_input["output_directory"]
+    instance_prompt = job_input["instance_prompt"]
+    batch_size = job_input["batch_size"]
+    training_steps = job_input["training_steps"]
+
+    job_output = {}
+
+    # most of the parameteres will be path (Network storage)
+    
+    training_command = (
         "accelerate launch src/train_dreambooth_lora_sdxl.py "
         "--pretrained_model_name_or_path=stabilityai/stable-diffusion-xl-base-1.0 "
-        "--pretrained_vae_model_name_or_path=madebyollin/sdxl-vae-fp16-fix "
-        "--instance_data_dir=dog "
-        "--output_dir=lora_xdsl "
+        f"--pretrained_vae_model_name_or_path={model_name} "
+        f"--instance_data_dir={dataset_directory_path} "
+        f"--output_dir={output_directory} "
         "--mixed_precision=fp16 "
-        "--instance_prompt='a photo of sks dog' "
+        f"--instance_prompt={instance_prompt} "
         "--resolution=1024 "
-        "--train_batch_size=2 "
+        f"--train_batch_size={batch_size} "
         "--gradient_accumulation_steps=2 "
         "--gradient_checkpointing "
         "--learning_rate=1e-4 "
@@ -57,20 +70,45 @@ def handler(event):
         "--enable_xformers_memory_efficient_attention "
         "--mixed_precision=fp16 "
         "--use_8bit_adam "
-        "--max_train_steps=1 "
+        f"--max_train_steps={training_steps}"
         "--checkpointing_steps=717 "
         "--seed=0 "
         "--push_to_hub"
     )
+#-----------------------#
+# Example
+
+#"accelerate launch src/train_dreambooth_lora_sdxl.py \
+#   --pretrained_model_name_or_path='stabilityai/stable-diffusion-xl-base-1.0' \
+#   --pretrained_vae_model_name_or_path='madebyollin/sdxl-vae-fp16-fix' \
+#   --instance_data_dir='dog' \
+#   --output_dir='lora-trained-xl-colab' \
+#   --mixed_precision='fp16' \
+#   --instance_prompt='a photo of sks dog' \
+#   --resolution=1024 \
+#   --train_batch_size=2 \
+#   --gradient_accumulation_steps=2 \
+#   --gradient_checkpointing \
+#   --learning_rate=1e-4 \
+#   --lr_scheduler='constant' \
+#   --lr_warmup_steps=0 \
+#   --enable_xformers_memory_efficient_attention \
+#   --mixed_precision='fp16' \
+#   --use_8bit_adam \
+#   --max_train_steps=1 \
+#   --checkpointing_steps=717 \
+#   --seed='0' \
+#   --push_to_hub" 
+#-----------------------#
 
     try:
         # Execute the command and capture the output
         huggingface_login()
         run_accelerate_config()
-        output = subprocess.check_output(command, stderr=subprocess.STDOUT, text=True, shell=True)
+        output = subprocess.check_output(training_command, stderr=subprocess.STDOUT, text=True, shell=True)
         
         # Return the output directory or a message indicating success
-        return output
+        return job_output["output_directory"] = output_directory
 
     except subprocess.CalledProcessError as e:
         error_message = f"Error running command: {e}\nOutput: {e.output}"
