@@ -28,10 +28,15 @@ The following inputs can be used for testing the model:
         "model_name": "/workspace/pretrained_model",
         "dataset_directory_path": "/workspace/data/dataset",
         "output_directory": "/workspace/output",
-        "instance_prompt": "a photo of <data_set>",
+        "instance_prompt": "a photo of <subject>",
         "batch_size": 32,
         "training_steps": 1000,
     }
 }
 
 ```
+
+
+NOTE: This SDXL fine-tuning worker requires you to provide a folder containing the images of the new instance you'd like to include in the SDXL model. Additionally, we need to ensure that you provide an instance prompt with the following syntax: 'a photo of _subject_' where "subject" is the name of the item you want to use for fine-tuning the SDXL model (e.g., the images inside the dataset directory).
+
+
