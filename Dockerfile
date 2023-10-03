@@ -36,14 +36,16 @@ RUN python3 -c "from huggingface_hub import snapshot_download; local_dir = '/wor
 # COPY check_version.py /usr/local/lib/python3.8/dist-packages/diffusers/utils/__init__.py
 COPY __init__.py /usr/local/lib/python3.10/dist-packages/diffusers/utils/__init__.py
 
-
+RUN accelerate config default
 
 ADD src .
 
-CMD python -u handler.py
+# CMD python -u handler.py
+
+CMD ["bash", "-c", "accelerate config default && python -u handler.py"]
 
 # This uses CPU, needs to set GPU.
-# RUN accelerate config default
+
 
 # Log in to Hugging Face (if needed)
 # RUN huggingface-cli login
