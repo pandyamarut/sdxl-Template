@@ -5,7 +5,7 @@ import os
 def huggingface_login():
     try:
         # Get the value of the TOKEN environment variable
-        token = os.environ.get("HUGGING_FACE_WRITE_TOKEN")
+        token = os.environ.get("HUGGING_FACE_HUB_WRITE_TOKEN")
 
         if token:
             # Run the huggingface-cli login command with the TOKEN environment variable

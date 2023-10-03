@@ -2,6 +2,8 @@
 FROM runpod/pytorch:1.13.0-py3.10-cuda11.7.1-devel
 
 ENV DEBIAN_FRONTEND=noninteractive
+ARG HUGGING_FACE_HUB_WRITE_TOKEN
+ENV HUGGING_FACE_HUB_WRITE_TOKEN=$HUGGING_FACE_HUB_WRITE_TOKEN
 
 # Use bash shell with pipefail option
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -25,13 +27,6 @@ RUN pip install --upgrade pip && \
 # RUN wget https://raw.githubusercontent.com/huggingface/diffusers/main/examples/dreambooth/train_dreambooth_lora_sdxl.py
 COPY src/train_dreambooth_lora_sdxl.py /workspace/src/train_dreambooth_lora_sdxl.py
 
-
-# Create a directory for the dataset and download the example images to it, this is test
-RUN mkdir /workspace/dog
-
-# Download the example images
-#RUN pip install huggingface_hub
-RUN python3 -c "from huggingface_hub import snapshot_download; local_dir = '/workspace/dog'; snapshot_download('diffusers/dog-example', local_dir=local_dir, repo_type='dataset', ignore_patterns='.gitattributes')"
 
 # COPY check_version.py /usr/local/lib/python3.8/dist-packages/diffusers/utils/__init__.py
 COPY __init__.py /usr/local/lib/python3.10/dist-packages/diffusers/utils/__init__.py
