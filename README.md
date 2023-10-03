@@ -28,7 +28,7 @@ The following inputs can be used for testing the model:
         "model_name": "/workspace/pretrained_model",
         "dataset_directory_path": "/workspace/data/dataset",
         "output_directory": "/workspace/output",
-        "instance_prompt": "<enter prompt based on your dataset>",
+        "instance_prompt": "a photo of <data_set>",
         "batch_size": 32,
         "training_steps": 1000,
     }
