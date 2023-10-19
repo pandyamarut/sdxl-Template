@@ -81,7 +81,7 @@ def handler(job):
         "--enable_xformers_memory_efficient_attention "
         "--mixed_precision=fp16 "
         "--use_8bit_adam "
-        f"--max_train_steps={training_steps}"
+        f"--max_train_steps={training_steps} "
         "--checkpointing_steps=717 "
         "--seed=0 "
         "--push_to_hub"
