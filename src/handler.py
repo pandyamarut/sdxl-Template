@@ -82,7 +82,8 @@ def handler(job):
         output = subprocess.check_output(training_command, stderr=subprocess.STDOUT, text=True, shell=True)
         
         # Return the output directory or a message indicating success
-        return job_output["output_directory"] = output_directory
+        job_output["output_directory"] == output_directory
+        return job_output
 
     except subprocess.CalledProcessError as e:
         error_message = f"Error running command: {e}\nOutput: {e.output}"
