@@ -58,7 +58,9 @@ def handler(job):
     batch_size = job_input["batch_size"]
     training_steps = job_input["training_steps"]
 
-    dataset_path = download_dataset(dataset_directory_path, None)
+    local_directory = "./dog"
+
+    dataset_path = download_dataset(dataset_directory_path, local_dir=local_directory)
     job_output = {}
 
     # most of the parameteres will be path (Network storage)
@@ -70,7 +72,7 @@ def handler(job):
         f"--instance_data_dir={dataset_path} "
         f"--output_dir={output_directory} "
         "--mixed_precision=fp16 "
-        f"--instance_prompt={instance_prompt} "
+        f"--instance_prompt='{instance_prompt}' "
         "--resolution=1024 "
         f"--train_batch_size={batch_size} "
         "--gradient_accumulation_steps=2 "
