@@ -1,6 +1,7 @@
 import runpod
 import subprocess
 import os
+from huggingface_hub import snapshot_download
 
 def huggingface_login():
     try:
@@ -30,7 +31,18 @@ def run_accelerate_config():
         print("Accelerate config successful!")
     except subprocess.CalledProcessError as e:
         error_message = f"Error running accelerate config: {e}"
-        print(error_message)   
+        print(error_message) 
+
+def download_dataset(dataset_name, local_dir="./"):
+    try:
+        full_local_dir = os.path.join(local_dir, dataset_name)
+        snapshot_download(dataset_name, local_dir=local_dir, repo_type="dataset", ignore_patterns=".gitattributes")
+        print(f"Downloaded '{dataset_name}' to '{local_dir}' successfully.")
+        return full_local_dir
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return None
+
 
 def handler(job):
     '''
@@ -40,14 +52,13 @@ def handler(job):
     job_input = job["input"]
 
     # Get the parameters from the job input
-
-    model_name = job_input["model_name"]
     dataset_directory_path = job_input["dataset_directory_path"]
     output_directory = job_input["output_directory"]
     instance_prompt = job_input["instance_prompt"]
     batch_size = job_input["batch_size"]
     training_steps = job_input["training_steps"]
 
+    dataset_path = download_dataset(dataset_directory_path, None)
     job_output = {}
 
     # most of the parameteres will be path (Network storage)
@@ -55,8 +66,8 @@ def handler(job):
     training_command = (
         "accelerate launch src/train_dreambooth_lora_sdxl.py "
         "--pretrained_model_name_or_path=stabilityai/stable-diffusion-xl-base-1.0 "
-        f"--pretrained_vae_model_name_or_path={model_name} "
-        f"--instance_data_dir={dataset_directory_path} "
+        f"--pretrained_vae_model_name_or_path=madebyollin/sdxl-vae-fp16-fix "
+        f"--instance_data_dir={dataset_path} "
         f"--output_dir={output_directory} "
         "--mixed_precision=fp16 "
         f"--instance_prompt={instance_prompt} "
@@ -79,7 +90,7 @@ def handler(job):
         # Execute the command and capture the output
         huggingface_login()
         run_accelerate_config()
-        output = subprocess.check_output(training_command, stderr=subprocess.STDOUT, text=True, shell=True)
+        output = subprocess.run(training_command, stderr=subprocess.STDOUT, text=True, shell=True, check=True)
         
         # Return the output directory or a message indicating success
         job_output["output_directory"] == output_directory
