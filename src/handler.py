@@ -52,16 +52,16 @@ def handler(job):
 
     # Get the parameters from the job input
     dataset_directory_path = job_input["dataset_directory_path"]
-    local_directory = job_input["local_directory"]
+    local_dataset_directory = job_input["local_directory"]
     output_directory = job_input["output_directory"]
     instance_prompt = job_input["instance_prompt"]
     batch_size = job_input["batch_size"]
     hf_token = job_input["hf_token"]
     training_steps = job_input["training_steps"]
     
-    # example:  local_directory = "./dog"
+    # example:  local_dataset_directory = "./dog"
 
-    dataset_path = download_dataset(dataset_directory_path, local_dir=local_directory)
+    dataset_path = download_dataset(dataset_directory_path, local_dir=local_dataset_directory)
     job_output = {}
 
     # most of the parameteres will be path (Network storage)
