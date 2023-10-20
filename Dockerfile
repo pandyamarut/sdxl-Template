@@ -28,7 +28,6 @@ RUN pip install --upgrade pip && \
 COPY src/train_dreambooth_lora_sdxl.py /workspace/src/train_dreambooth_lora_sdxl.py
 
 
-# COPY check_version.py /usr/local/lib/python3.8/dist-packages/diffusers/utils/__init__.py
 COPY __init__.py /usr/local/lib/python3.10/dist-packages/diffusers/utils/__init__.py
 
 # RUN accelerate config default
