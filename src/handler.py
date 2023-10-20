@@ -3,18 +3,17 @@ import subprocess
 import os
 from huggingface_hub import snapshot_download
 
-def huggingface_login():
+def huggingface_login(token):
     try:
-        # Get the value of the TOKEN environment variable
-        token = os.environ.get("HUGGING_FACE_HUB_WRITE_TOKEN")
-
         if token:
             # Run the huggingface-cli login command with the TOKEN environment variable
             subprocess.run(["huggingface-cli", "login", "--token", token], check=True)
-
             # If the command was successful, you can print a success message or perform other actions
-            print("Hugging Face login successful!")
-
+            print("Hugging Face login successful!, Token from input")
+        elif os.environ.get("HUGGING_FACE_HUB_WRITE_TOKEN"):
+            token = os.environ.get("HUGGING_FACE_HUB_WRITE_TOKEN")
+            subprocess.run(["huggingface-cli", "login", "--token", token], check=True)
+            print("Hugging Face login successful!, Token from env")       
         else:
             # Handle the case where the TOKEN environment variable is not set
             print("TOKEN environment variable is not set. Please set it before running the command.")
@@ -53,12 +52,14 @@ def handler(job):
 
     # Get the parameters from the job input
     dataset_directory_path = job_input["dataset_directory_path"]
+    local_directory = job_input["local_directory"]
     output_directory = job_input["output_directory"]
     instance_prompt = job_input["instance_prompt"]
     batch_size = job_input["batch_size"]
+    hf_token = job_input["hf_token"]
     training_steps = job_input["training_steps"]
-
-    local_directory = "./dog"
+    
+    # example:  local_directory = "./dog"
 
     dataset_path = download_dataset(dataset_directory_path, local_dir=local_directory)
     job_output = {}
@@ -90,7 +91,7 @@ def handler(job):
     )
     try:
         # Execute the command and capture the output
-        huggingface_login()
+        huggingface_login(hf_token)
         run_accelerate_config()
         output = subprocess.run(training_command, stderr=subprocess.STDOUT, text=True, shell=True, check=True)
         
