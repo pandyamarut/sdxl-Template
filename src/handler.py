@@ -37,7 +37,7 @@ def download_dataset(dataset_name, local_dir="./"):
         full_local_dir = os.path.join(local_dir, dataset_name)
         snapshot_download(dataset_name, local_dir=local_dir, repo_type="dataset", ignore_patterns=".gitattributes")
         print(f"Downloaded '{dataset_name}' to '{local_dir}' successfully.")
-        return full_local_dir
+        return local_dir
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         return None
