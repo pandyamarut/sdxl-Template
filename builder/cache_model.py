@@ -30,12 +30,10 @@ def get_diffusion_pipelines():
         "use_safetensors": True
     }
 
-    pipe = fetch_pretrained_model(StableDiffusionXLPipeline,
+    pipeline = fetch_pretrained_model(StableDiffusionXLPipeline,
                                   "stabilityai/stable-diffusion-xl-base-1.0", **common_args)
-    refiner = fetch_pretrained_model(StableDiffusionXLImg2ImgPipeline,
-                                     "stabilityai/stable-diffusion-xl-refiner-1.0", **common_args)
 
-    return pipe, refiner
+    return pipeline
 
 
 if __name__ == "__main__":
