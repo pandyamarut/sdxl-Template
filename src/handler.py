@@ -34,16 +34,6 @@ def run_accelerate_config():
         error_message = f"Error running accelerate config: {e}"
         print(error_message) 
 
-def download_dataset(dataset_name, local_dir="./"):
-    try:
-        full_local_dir = os.path.join(local_dir, dataset_name)
-        snapshot_download(dataset_name, local_dir=local_dir, repo_type="dataset", ignore_patterns=".gitattributes")
-        print(f"Downloaded '{dataset_name}' to '{local_dir}' successfully.")
-        return local_dir
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
-        return None
-
 
 def handler(job):
     '''
