@@ -1,4 +1,5 @@
 import runpod
+from runpod.serverless.utils import rp_download
 import subprocess
 import os
 from huggingface_hub import snapshot_download
@@ -49,11 +50,10 @@ def handler(job):
     '''
 
     job_input = job["input"]
+    job_id = job["id"]
 
     # Get the parameters from the job input
-    dataset_directory_path = job_input["dataset_directory_path"]
-    local_dataset_directory = job_input["local_directory"]
-    output_directory = job_input["output_directory"]
+    dataset_directory_path = job_input["dataset_url"]
     instance_prompt = job_input["instance_prompt"]
     batch_size = job_input["batch_size"]
     hf_token = job_input["hf_token"]
@@ -61,7 +61,33 @@ def handler(job):
     
     # example:  local_dataset_directory = "./dog"
 
-    dataset_path = download_dataset(dataset_directory_path, local_dir=local_dataset_directory)
+    
+
+     # -------------------------- Download Training Data -------------------------- #
+    downloaded_input = rp_download.file(dataset_directory_path)
+    print(f"Downloaded input: {downloaded_input}")
+    # Make clean data directory
+    allowed_extensions = [".jpg", ".jpeg", ".png"]
+    flat_directory = f"job_files/{job_id}/clean_data"
+    os.makedirs(flat_directory, exist_ok=True)
+
+    for root, dirs, files in os.walk(downloaded_input['extracted_path']):
+        # Skip __MACOSX folder
+        if '__MACOSX' in root:
+            continue
+
+        for file in files:
+            file_path = os.path.join(root, file)
+            if os.path.splitext(file_path)[1].lower() in allowed_extensions:
+                shutil.copy(
+                    os.path.join(downloaded_input['extracted_path'], file_path),
+                    flat_directory
+                )
+
+    os.makedirs(f"job_files/{job_id}", exist_ok=True)
+    os.makedirs(f"job_files/{job_id}/fine_tuned_model", exist_ok=True)
+
+    # -------------------------- Run Training -------------------------- #
     job_output = {}
 
     # most of the parameteres will be path (Network storage)
@@ -70,8 +96,8 @@ def handler(job):
         "accelerate launch src/train_dreambooth_lora_sdxl.py "
         "--pretrained_model_name_or_path='stabilityai/stable-diffusion-xl-base-1.0' "
         "--pretrained_vae_model_name_or_path='madebyollin/sdxl-vae-fp16-fix' "
-        f"--instance_data_dir={dataset_path} "
-        f"--output_dir={output_directory} "
+        f"--instance_data_dir=job_files/{job_id}/clean_data "
+        f"--output_dir=outputjob_files/{job_id}/fine_tuned_model "
         "--mixed_precision=fp16 "
         f"--instance_prompt='{instance_prompt}' "
         "--resolution=1024 "
