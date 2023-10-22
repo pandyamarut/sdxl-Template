@@ -32,6 +32,8 @@ COPY __init__.py /usr/local/lib/python3.10/dist-packages/diffusers/utils/__init_
 
 # RUN accelerate config default
 
+CMD huggingface-cli login --token $HUGGING_FACE_HUB_WRITE_TOKEN
+
 # Cache Models
 COPY builder/cache_model.py /cache_model.py
 RUN python3 /cache_model.py && \
