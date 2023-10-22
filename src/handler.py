@@ -39,7 +39,6 @@ def handler(job):
     '''
     This is the handler function that will be called by the serverless.
     '''
-
     job_input = job["input"]
     job_id = job["id"]
 

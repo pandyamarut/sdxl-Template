@@ -32,6 +32,11 @@ COPY __init__.py /usr/local/lib/python3.10/dist-packages/diffusers/utils/__init_
 
 # RUN accelerate config default
 
+# Cache Models
+COPY builder/cache_model.py /cache_model.py
+RUN python3 /cache_model.py && \
+    rm /cache_model.py
+
 ADD src .
 
 CMD ["bash", "-c", "accelerate config default && python -u handler.py"]
