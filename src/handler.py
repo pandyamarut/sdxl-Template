@@ -3,6 +3,7 @@ from runpod.serverless.utils import rp_download
 import subprocess
 import os
 from huggingface_hub import snapshot_download
+import shutil
 
 def huggingface_login(token):
     try:
@@ -122,7 +123,7 @@ def handler(job):
         output = subprocess.run(training_command, stderr=subprocess.STDOUT, text=True, shell=True, check=True)
         
         # Return the output directory or a message indicating success
-        job_output = {"output_directory": output_directory}
+        job_output = {"output_directory": f"job_files/{job_id}/fine_tuned_model"}
         return job_output
 
     except subprocess.CalledProcessError as e:
