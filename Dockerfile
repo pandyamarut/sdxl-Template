@@ -35,7 +35,11 @@ COPY __init__.py /usr/local/lib/python3.10/dist-packages/diffusers/utils/__init_
 CMD huggingface-cli login --token $HUGGING_FACE_HUB_WRITE_TOKEN
 
 # Cache Models
-RUN python -u /download_model.py
+COPY builder/download_model.py /download_model.py
+RUN pip install --upgrade pip && \
+    pip install -r /download_model.py && \
+    rm /download_model.py
+
 
 ADD src .
 
