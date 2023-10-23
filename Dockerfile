@@ -36,7 +36,7 @@ CMD huggingface-cli login --token $HUGGING_FACE_HUB_WRITE_TOKEN
 
 # Cache Models
 COPY builder/cache_model.py /cache_model.py
-RUN python3 /cache_model.py && \
+RUN python /cache_model.py && \
     rm /cache_model.py
 
 ADD src .
