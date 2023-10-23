@@ -12,11 +12,6 @@ WORKDIR /
 
 # Install required packages
 RUN apt-get update && apt-get install -y python3-pip
-#remove below line
-RUN apt-get update && apt-get install -y git
-
-# Install required packages
-RUN pip install git+https://github.com/huggingface/diffusers.git@e731ae0ec817649bf2c15f9f719269d57062696c -q
 
 # Test with abov
 COPY builder/requirements.txt /requirements.txt
