@@ -99,6 +99,7 @@ Special VAE used for training: {vae_path}.
         f.write(yaml + model_card)
 
 MODEL_CACHE = "diffusers-cache"
+
 def import_model_class_from_model_name_or_path(
     pretrained_model_name_or_path: str, revision: str, subfolder: str = "text_encoder"
 ):
