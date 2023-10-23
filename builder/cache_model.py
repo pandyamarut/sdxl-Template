@@ -39,11 +39,6 @@ def download_model(model_url: str):
                 if chunk:
                     f.write(chunk)
 
-    StableDiffusionSafetyChecker.from_pretrained(
-        SAFETY_MODEL_ID,
-        cache_dir=model_cache_path,
-    )
-
     StableDiffusionPipeline.from_pretrained(
         model_id,
         cache_dir=model_cache_path,

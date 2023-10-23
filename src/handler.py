@@ -34,7 +34,7 @@ def run_accelerate_config():
         error_message = f"Error running accelerate config: {e}"
         print(error_message) 
 
-
+MODEL_BASE_PATH = os.environ.get('MODEL_BASE_PATH', '/workspace/')
 def handler(job):
     '''
     This is the handler function that will be called by the serverless.
@@ -84,7 +84,7 @@ def handler(job):
     
     training_command = (
         "accelerate launch src/train_dreambooth_lora_sdxl.py "
-        "--pretrained_model_name_or_path='stabilityai/stable-diffusion-xl-base-1.0' "
+        f"--pretrained_model_name_or_path={MODEL_BASE_PATH}stabilityai/stable-diffusion-xl-base-1.0 "
         "--pretrained_vae_model_name_or_path='madebyollin/sdxl-vae-fp16-fix' "
         f"--instance_data_dir=job_files/{job_id}/clean_data "
         f"--output_dir=outputjob_files/{job_id}/fine_tuned_model "
