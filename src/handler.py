@@ -84,7 +84,7 @@ def handler(job):
     
     training_command = (
         "accelerate launch src/train_dreambooth_lora_sdxl.py "
-        f"--pretrained_model_name_or_path={MODEL_BASE_PATH}stabilityai/stable-diffusion-xl-base-1.0 "
+        f"--pretrained_model_name_or_path={MODEL_BASE_PATH}stable-diffusion-xl-base-1.0 "
         "--pretrained_vae_model_name_or_path='madebyollin/sdxl-vae-fp16-fix' "
         f"--instance_data_dir=job_files/{job_id}/clean_data "
         f"--output_dir=outputjob_files/{job_id}/fine_tuned_model "

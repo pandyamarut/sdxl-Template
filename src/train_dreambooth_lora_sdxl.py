@@ -98,8 +98,6 @@ Special VAE used for training: {vae_path}.
     with open(os.path.join(repo_folder, "README.md"), "w") as f:
         f.write(yaml + model_card)
 
-MODEL_CACHE = "diffusers-cache"
-
 def import_model_class_from_model_name_or_path(
     pretrained_model_name_or_path: str, revision: str, subfolder: str = "text_encoder"
 ):
@@ -646,7 +644,7 @@ def main(args):
                 args.pretrained_model_name_or_path,
                 torch_dtype=torch_dtype,
                 revision=args.revision,
-                cache_dir=MODEL_CACHE,
+                local_files_only=True,
             )
             pipeline.set_progress_bar_config(disable=True)
 
@@ -1223,7 +1221,7 @@ def main(args):
                     unet=accelerator.unwrap_model(unet),
                     revision=args.revision,
                     torch_dtype=weight_dtype,
-                    cache_dir=MODEL_CACHE
+                    local_files_only=True,
                 )
 
                 # We train on the simplified learning objective. If we were previously predicting a variance, we need the scheduler to ignore it

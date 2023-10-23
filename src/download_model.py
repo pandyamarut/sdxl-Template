@@ -16,7 +16,6 @@ if HUGGING_FACE_HUB_TOKEN:
 snapshot_download(
     MODEL_NAME,
     revision="main",
-    allow_patterns="*.safetensors",
     local_dir=f"{MODEL_BASE_PATH}{MODEL_NAME.split('/')[1]}",
     **download_kwargs
 )
