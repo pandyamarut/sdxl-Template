@@ -25,7 +25,7 @@
 # builder/model_fetcher.py
 
 import torch
-from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline
+from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline, AutoencoderKL
 
 
 def fetch_pretrained_model(model_class, model_name, **kwargs):
