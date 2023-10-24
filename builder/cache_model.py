@@ -53,7 +53,7 @@ def get_diffusion_pipelines():
         "variant": "fp16",
         "use_safetensors": True
     }
-
+    vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16)
     pipe = fetch_pretrained_model(StableDiffusionXLPipeline,
                                   "stabilityai/stable-diffusion-xl-base-1.0", **common_args)
 
