@@ -40,6 +40,9 @@ COPY builder/cache_model.py /cache_model.py
 RUN python /cache_model.py && \
     rm /cache_model.py
 
+
+RUN huggingface-cli scan-cache
+
 ADD src .
 
 
