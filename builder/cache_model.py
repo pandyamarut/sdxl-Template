@@ -25,7 +25,40 @@
 # builder/model_fetcher.py
 
 import torch
-from diffusers import StableDiffusionXLPipeline, StableDiffusionXLImg2ImgPipeline, AutoencoderKL
+import diffusers
+from diffusers import (
+    AutoencoderKL,
+    DDPMScheduler,
+    DPMSolverMultistepScheduler,
+    StableDiffusionXLPipeline,
+    UNet2DConditionModel,
+)
+from transformers import AutoTokenizer, PretrainedConfig
+
+
+
+MODEL_NAME = "stabilityai/stable-diffusion-xl-base-1.0"
+
+
+
+def import_model_class_from_model_name_or_path(
+    pretrained_model_name_or_path: str, revision: str, subfolder: str = "text_encoder"
+):
+    text_encoder_config = PretrainedConfig.from_pretrained(
+        pretrained_model_name_or_path, subfolder=subfolder, revision=revision
+    )
+    model_class = text_encoder_config.architectures[0]
+
+    if model_class == "CLIPTextModel":
+        from transformers import CLIPTextModel
+
+        return CLIPTextModel
+    elif model_class == "CLIPTextModelWithProjection":
+        from transformers import CLIPTextModelWithProjection
+
+        return CLIPTextModelWithProjection
+    else:
+        raise ValueError(f"{model_class} is not supported.")
 
 
 def fetch_pretrained_model(model_class, model_name, **kwargs):
@@ -54,6 +87,30 @@ def get_diffusion_pipelines():
         "use_safetensors": True
     }
     vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16)
+      # Load the tokenizers
+    tokenizer_one = AutoTokenizer.from_pretrained(
+        MODEL_NAME, subfolder="tokenizer", revision=None, use_fast=False
+    )
+    tokenizer_two = AutoTokenizer.from_pretrained(
+        MODEL_NAME, subfolder="tokenizer_2", revision=None, use_fast=False
+    )
+    noise_scheduler = DDPMScheduler.from_pretrained(MODEL_NAME, subfolder="scheduler")
+    unet = UNet2DConditionModel.from_pretrained(
+       MODEL_NAME, subfolder="unet", revision=None
+    )
+    text_encoder_cls_one = import_model_class_from_model_name_or_path(
+        MODEL_NAME, None
+    )
+    text_encoder_cls_two = import_model_class_from_model_name_or_path(
+        MODEL_NAME, None, subfolder="text_encoder_2"
+    )
+
+    text_encoder_one = text_encoder_cls_one.from_pretrained(
+        MODEL_NAME, subfolder="text_encoder", revision=None
+    )
+    text_encoder_two = text_encoder_cls_two.from_pretrained(
+         MODEL_NAME, subfolder="text_encoder_2", revision=None
+    )
     pipe = fetch_pretrained_model(StableDiffusionXLPipeline,
                                   "stabilityai/stable-diffusion-xl-base-1.0", **common_args)
 
