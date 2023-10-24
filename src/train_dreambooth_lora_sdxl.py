@@ -715,7 +715,7 @@ def main(args):
 
     )
     unet = UNet2DConditionModel.from_pretrained(
-        args.pretrained_model_name_or_path, subfolder="unet", revision=args.revision, local_files_only=True, local_files_only=True,
+        args.pretrained_model_name_or_path, subfolder="unet", revision=args.revision, local_files_only=True,
     )
 
     # We only train the additional adapter LoRA layers
